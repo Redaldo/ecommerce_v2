@@ -3,6 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Product;
+use App\Category;
 use Faker\Generator as Faker;
 
 $factory->define(Product::class, function (Faker $faker) {
@@ -12,7 +13,7 @@ $factory->define(Product::class, function (Faker $faker) {
         'description' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
         'price' => $faker->numberBetween($min = 100, $max = 9000),
         'image' => '5dfh4f455sdggdsfgsdfdfgfgdfg.jpg',
-        'category_id' => $faker->numberBetween($min = 1, $max = 6),
-        'brand_id' => $faker->numberBetween($min = 1, $max = 6)
+        'category_id' => factory(App\Category::class),
+        'brand_id' => factory(App\Brand::class),
     ];
 });

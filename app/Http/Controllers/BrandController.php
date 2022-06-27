@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Brand;
 use Illuminate\Http\Request;
+use App\Http\Resources\BrandResource;
 
 class BrandController extends Controller
 {
@@ -14,7 +15,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        //
+         return BrandResource::collection(Brand::with('products')->get());
     }
 
     /**
@@ -36,7 +37,8 @@ class BrandController extends Controller
      */
     public function show(Brand $brand)
     {
-        //
+        $brand->load('products');
+        return new BrandResource($brand);
     }
 
     /**

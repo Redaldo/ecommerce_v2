@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\ProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BrandResource extends JsonResource
+class ProductShowResource extends ProductResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +14,8 @@ class BrandResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'name' => $this->name,
-            'products' => ProductResource::collection($this->whenLoaded('products'))
-        ];
+        return array_merge(parent::toArray($request),[
+            'variation' => []
+        ]);
     }
 }

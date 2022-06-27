@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    protected $guarded = [];
+    
     public function products()
     {
-        return $this->hanMany(Product::class);
+        return $this->hasMany(Product::class);
     }
+
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id', 'id');
