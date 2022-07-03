@@ -12,7 +12,7 @@ $factory->define(Product::class, function (Faker $faker) {
         'slug' => $faker->name,
         'description' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
         'price' => $faker->numberBetween($min = 100, $max = 9000),
-        'image' => '5dfh4f455sdggdsfgsdfdfgfgdfg.jpg',
+        'image' => 'default.png',
         'category_id' => factory(App\Category::class),
         'brand_id' => factory(App\Brand::class),
     ];

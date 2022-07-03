@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use League\Flysystem\Util;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductShowResource;
 
@@ -14,6 +16,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         return ProductResource::collection(Product::with('category', 'brand')->paginate(3));
@@ -25,9 +28,27 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        //
+        if ($request->hasFile('image')) {
+            $file = $request->image;
+            $extension = $file->extension();
+            $filename = time().'.'.$extension;
+            $file->move('images', $filename); 
+        }else {
+            $filename = 'default.png';
+        }
+
+       Product::create([
+        'name' => $request->name,
+        'slug' => $request->slug,
+        'description' => $request->description,
+        'price' => $request->price,
+        'image' => $filename,
+        'category_id' => $request->category_id,
+        'brand_id' => $request->brand_id,
+
+       ]);
     }
 
     /**
