@@ -6,6 +6,8 @@ use App\Product;
 use League\Flysystem\Util;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
+use Intervention\Image\Facades\Image;
+use Illuminate\Database\Query\Builder;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductShowResource;
 
@@ -17,9 +19,17 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
+    public function index(Request $request)
     {
-        return ProductResource::collection(Product::with('category', 'brand')->paginate(3));
+        $product = Product::query();
+        if ($request->has('category')) {
+            $product->where('category_id', $request->category)->get();
+        }
+        if ($request->has('brand')) {
+            $product->where('brand_id', $request->brand)->get();
+        }
+        
+        return ProductResource::collection($product->with('category', 'brand')->paginate(3));
     }
 
     /**
@@ -35,6 +45,10 @@ class ProductController extends Controller
             $extension = $file->extension();
             $filename = time().'.'.$extension;
             $file->move('images', $filename); 
+
+            $resizedImage = Image::make(public_path('images/'.$filename))
+                                   ->fit(400, 400)
+                                   ->save(public_path('images\thumbnail_'.$filename));
         }else {
             $filename = 'default.png';
         }
